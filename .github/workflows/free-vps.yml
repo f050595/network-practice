@@ -1,0 +1,55 @@
+name: free-vps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  vps-1:
+    name: "VPS 1 (shell here)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 360   # 6 часов максимум
+    steps:
+      - name: Show runner info
+        run: |
+          echo "=========================================="
+          echo "  VPS 1"
+          echo "=========================================="
+          echo "Hostname : $(hostname)"
+          echo "Public IP: $(curl -s --max-time 5 ifconfig.me || echo 'n/a')"
+          echo "OS       : $(grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d \")"
+          echo "Tailscale: $(which tailscale 2>/dev/null || echo 'not installed')"
+          echo ""
+          echo "Установи вручную, если нужно:"
+          echo "  curl -fsSL https://tailscale.com/install.sh | sh"
+          echo "  sudo tailscale up --authkey=tskey-xxx --hostname=vps-1"
+          echo ""
+
+      - name: Open interactive shell
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: ${{ github.actor }}
+
+  vps-2:
+    name: "VPS 2 (shell here)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Show runner info
+        run: |
+          echo "=========================================="
+          echo "  VPS 2"
+          echo "=========================================="
+          echo "Hostname : $(hostname)"
+          echo "Public IP: $(curl -s --max-time 5 ifconfig.me || echo 'n/a')"
+          echo "OS       : $(grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d \")"
+          echo "Tailscale: $(which tailscale 2>/dev/null || echo 'not installed')"
+          echo ""
+          echo "Установи вручную, если нужно:"
+          echo "  curl -fsSL https://tailscale.com/install.sh | sh"
+          echo "  sudo tailscale up --authkey=tskey-xxx --hostname=vps-2"
+          echo ""
+
+      - name: Open interactive shell
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: ${{ github.actor }}
