@@ -1,1 +1,78 @@
+name: network-ping-practice
 
+on:
+  workflow_dispatch:  # запускается вручную из Actions tab
+
+jobs:
+  vps-1:
+    name: "VPS 1 (moscow)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Tailscale
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale up \
+            --authkey=${{ secrets.TAILSCALE_KEY }} \
+            --hostname=vps-1-moscow
+
+      - name: Show my Tailscale IP
+        run: |
+          IP=$(tailscale ip -4)
+          echo "My Tailscale IP: $IP"
+
+      - name: Wait for peer to come online
+        run: |
+          echo "Waiting for vps-2-spb to appear in tailnet..."
+          for i in {1..30}; do
+            if tailscale status | grep -q "vps-2-spb"; then
+              echo "Peer is online"
+              tailscale status
+              break
+            fi
+            echo "Attempt $i/30..."
+            sleep 5
+          done
+
+      - name: Ping peer
+        run: |
+          echo "=== ping vps-2-spb ==="
+          ping -c 5 vps-2-spb
+
+      - name: Traceroute to peer
+        run: |
+          echo "=== traceroute vps-2-spb ==="
+          traceroute vps-2-spb
+
+  vps-2:
+    name: "VPS 2 (spb)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Tailscale
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale up \
+            --authkey=${{ secrets.TAILSCALE_KEY }} \
+            --hostname=vps-2-spb
+
+      - name: Show my Tailscale IP
+        run: |
+          IP=$(tailscale ip -4)
+          echo "My Tailscale IP: $IP"
+
+      - name: Wait for peer to come online
+        run: |
+          echo "Waiting for vps-1-moscow to appear in tailnet..."
+          for i in {1..30}; do
+            if tailscale status | grep -q "vps-1-moscow"; then
+              echo "Peer is online"
+              tailscale status
+              break
+            fi
+            echo "Attempt $i/30..."
+            sleep 5
+          done
+
+      - name: Ping peer
+        run: |
+          echo "=== ping vps-1-moscow ==="
+          ping -c 5 vps-1-moscow
