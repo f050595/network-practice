@@ -12,7 +12,7 @@ jobs:
       - name: Show runner info
         run: |
           sudo apt update
-          sudo apt install -y traceroute mrt iperf3 curl
+          sudo apt install -y traceroute mtr iperf3 curl
           curl -fsSL https://tailscale.com/install.sh | sh
           sudo tailscale up --authkey=${{ secrets.TAILSCALE_KEY }} --hostname=vps-1
           echo "Ready! Tailscale IP: $(sudo tailscale ip -4)"
