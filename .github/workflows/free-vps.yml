@@ -11,18 +11,6 @@ jobs:
     steps:
       - name: Show runner info
         run: |
-          echo "=========================================="
-          echo "  VPS 1"
-          echo "=========================================="
-          echo "Hostname : $(hostname)"
-          echo "Public IP: $(curl -s --max-time 5 ifconfig.me || echo 'n/a')"
-          echo "OS       : $(grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d \")"
-          echo "Tailscale: $(which tailscale 2>/dev/null || echo 'not installed')"
-          echo ""
-          echo "Установи вручную, если нужно:"
-          echo "  curl -fsSL https://tailscale.com/install.sh | sh"
-          echo "  sudo tailscale up --authkey=tskey-xxx --hostname=vps-1"
-          echo ""
           apt update
           apt install -y traceroute mrt iperf3 curl
           curl -fsSL https://tailscale.com/install.sh | sh
