@@ -38,10 +38,10 @@ jobs:
           echo "=== ping vps-2-spb ==="
           ping -c 5 vps-2-spb
 
-      - name: Traceroute to peer
+      - name: Tracepath to peer
         run: |
-          echo "=== traceroute vps-2-spb ==="
-          traceroute vps-2-spb
+          echo "=== tracepath vps-2-spb ==="
+          tracepath vps-2-spb
 
   vps-2:
     name: "VPS 2 (spb)"
@@ -76,3 +76,8 @@ jobs:
         run: |
           echo "=== ping vps-1-moscow ==="
           ping -c 5 vps-1-moscow
+
+      - name: Tracepath to peer
+        run: |
+          echo "=== tracepath vps-1-moscow ==="
+          tracepath vps-1-moscow
